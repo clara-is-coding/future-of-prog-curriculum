@@ -1,0 +1,55 @@
+# Builds the Kobweb site as static files and publishes it to GitHub Pages.
+# Runs on every push to main (or manually from the Actions tab).
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Kobweb uses a headless browser to take a snapshot of each page during export
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright
+
+      # Same as running `kobweb export --layout static` inside the site folder
+      - name: Export static site
+        run: ./gradlew :site:kobwebExport -PkobwebReuseServer=false -PkobwebEnv=PROD -PkobwebRunLayout=STATIC -PkobwebBuildTarget=RELEASE -PkobwebExportLayout=STATIC
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/.kobweb/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
