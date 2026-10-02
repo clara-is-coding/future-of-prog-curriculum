@@ -6,6 +6,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.navigation.BasePath
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.init.registerStyleBase
@@ -31,15 +32,15 @@ fun initSiteStyles(ctx: InitSilkContext) {
     }
     // Toad mouse pointer ("0 0" = the click point is the image's top-left corner)
     ctx.stylesheet.registerStyleBase("html") {
-        Modifier.styleModifier { property("cursor", "url(\"/tode-cursor.png\") 0 0, auto") }
+        Modifier.styleModifier { property("cursor", "url(\"${BasePath.prependTo("/tode-cursor.png")}\") 0 0, auto") }
     }
     // Toad instead of the hand pointer on links and buttons too (disabled buttons keep the "not allowed" cursor)
     ctx.stylesheet.registerStyleBase("a, button:not(:disabled)") {
-        Modifier.styleModifier { property("cursor", "url(\"/tode-cursor.png\") 0 0, auto") }
+        Modifier.styleModifier { property("cursor", "url(\"${BasePath.prependTo("/tode-cursor.png")}\") 0 0, auto") }
     }
     // Winking toad while the mouse button is held down
     ctx.stylesheet.registerStyleBase("html:active, html:active *") {
-        Modifier.styleModifier { property("cursor", "url(\"/tode-winking-cursor.png\") 0 0, auto") }
+        Modifier.styleModifier { property("cursor", "url(\"${BasePath.prependTo("/tode-winking-cursor.png")}\") 0 0, auto") }
     }
 }
 

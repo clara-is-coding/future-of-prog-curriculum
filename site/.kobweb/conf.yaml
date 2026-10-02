@@ -1,5 +1,7 @@
 site:
   title: "How to prepare for the future of programming"
+  # GitHub Pages serves the site at https://clara-is-coding.github.io/future-of-prog-curriculum/
+  basePath: "future-of-prog-curriculum"
 
 server:
   files:

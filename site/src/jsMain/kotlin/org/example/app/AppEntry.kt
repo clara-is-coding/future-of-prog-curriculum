@@ -5,6 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.core.App
+import com.varabyte.kobweb.navigation.BasePath
 import com.varabyte.kobweb.silk.SilkApp
 import com.varabyte.kobweb.silk.components.layout.Surface
 import com.varabyte.kobweb.silk.init.InitSilk
@@ -26,7 +27,7 @@ fun AppEntry(content: @Composable () -> Unit) {
     DisposableEffect(Unit) {
         val link = document.createElement("link") as HTMLLinkElement
         link.rel = "stylesheet"
-        link.href = "/fonts.css"
+        link.href = BasePath.prependTo("/fonts.css")
         document.head?.appendChild(link)
         onDispose { document.head?.removeChild(link) }
     }

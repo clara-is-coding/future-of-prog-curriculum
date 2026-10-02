@@ -41,7 +41,7 @@ kotlin {
             // Uncomment the following if you want access to a large set of font-awesome icons:
             // implementation(libs.silk.icons.fa)
             implementation(libs.kobwebx.markdown)
-            implementation("canvas-confetti", "1.9.3"))
+            implementation(npm("canvas-confetti", "1.9.3"))
         }
 
         // Uncomment the following if you pass `includeServer = true` into the `configAsKobwebApplication` call.

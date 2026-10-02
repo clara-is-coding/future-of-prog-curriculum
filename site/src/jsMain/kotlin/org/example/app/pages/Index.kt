@@ -10,6 +10,7 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
+import com.varabyte.kobweb.navigation.BasePath
 import com.varabyte.kobweb.silk.style.toModifier
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
@@ -39,7 +40,7 @@ fun HomePage() {
                     // A see-through layer of green sits on top of the wallpaper, so it looks faint.
                     // Raise 0.85 to make it fainter, lower it to make it stronger.
                     val tint = "rgba(238, 247, 238, 0.85)"
-                    property("background-image", "linear-gradient($tint, $tint), url(\"/toad-academy-tile.png\")")
+                    property("background-image", "linear-gradient($tint, $tint), url(\"${BasePath.prependTo("/toad-academy-tile.png")}\")")
                     property("background-size", "auto, 128px")
                     property("background-repeat", "no-repeat, repeat")
                 }
