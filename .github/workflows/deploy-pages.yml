@@ -38,7 +38,8 @@ jobs:
 
       # Same as running `kobweb export --layout static` inside the site folder
       - name: Export static site
-        run: ./gradlew :site:kobwebExport -PkobwebReuseServer=false -PkobwebEnv=PROD -PkobwebRunLayout=STATIC -PkobwebBuildTarget=RELEASE -PkobwebExportLayout=STATIC
+        # kobwebEnv must be DEV: export starts a dev server to snapshot the pages, but the output is still a release build
+        run: ./gradlew :site:kobwebExport -PkobwebReuseServer=false -PkobwebEnv=DEV -PkobwebRunLayout=STATIC -PkobwebBuildTarget=RELEASE -PkobwebExportLayout=STATIC
 
       - uses: actions/upload-pages-artifact@v3
         with:
