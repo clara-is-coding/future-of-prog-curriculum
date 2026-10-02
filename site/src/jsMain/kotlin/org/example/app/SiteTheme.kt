@@ -1,58 +1,34 @@
 package org.example.app
 
 import com.varabyte.kobweb.compose.ui.graphics.Color
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import com.varabyte.kobweb.silk.theme.colors.palette.background
 import com.varabyte.kobweb.silk.theme.colors.palette.color
 
-/**
- * @property nearBackground A useful color to apply to a container that should differentiate itself from the background
- *   but just a little.
- */
-class SitePalette(
-    val nearBackground: Color,
-    val cobweb: Color,
-    val brand: Brand,
-) {
-    class Brand(
-        val primary: Color = Color.rgb(0x3C83EF),
-        val accent: Color = Color.rgb(0xF3DB5B),
-    )
-}
-
-object SitePalettes {
-    val light = SitePalette(
-        nearBackground = Color.rgb(0xF4F6FA),
-        cobweb = Colors.LightGray,
-        brand = SitePalette.Brand(
-            primary = Color.rgb(0x3C83EF),
-            accent = Color.rgb(0xFCBA03),
-        )
-    )
-    val dark = SitePalette(
-        nearBackground = Color.rgb(0x13171F),
-        cobweb = Colors.LightGray.inverted(),
-        brand = SitePalette.Brand(
-            primary = Color.rgb(0x3C83EF),
-            accent = Color.rgb(0xF3DB5B),
-        )
-    )
-}
-
-fun ColorMode.toSitePalette(): SitePalette {
-    return when (this) {
-        ColorMode.LIGHT -> SitePalettes.light
-        ColorMode.DARK -> SitePalettes.dark
-    }
+object SiteColors {
+    val Bg = Color.rgb(0xfaf9f6)
+    val Text = Color.rgb(0x1f1f2e)
+    val TextMuted = Color.rgb(0x6b7280)
+    val Success = Color.rgb(0x16a34a)
+    val Border = Color.rgb(0xe5e7eb)
+    val QuoteBorder = Color.rgb(0xc084fc)
+    val HandwrittenPurple = Color.rgb(0x7c3aed)
+    val LightPurple = Color.rgb(0xf3eefb)
+    val LightGreen = Color.rgb(0xeef7ee)
+    val DarkPurple = Color.rgb(0x5b21b6)
+    val DarkGreen = Color.rgb(0x15803d)
+    val Accent = DarkPurple
+    val AccentLight = Color.rgb(0xede9fe)
+    val AccentBorder = Color.rgb(0xddd6fe)
 }
 
 @InitSilk
 fun initTheme(ctx: InitSilkContext) {
-    ctx.theme.palettes.light.background = Color.rgb(0xFAFAFA)
-    ctx.theme.palettes.light.color = Colors.Black
-    ctx.theme.palettes.dark.background = Color.rgb(0x06080B)
-    ctx.theme.palettes.dark.color = Colors.White
+    // Lock both palettes to our light theme so the site never goes dark
+    ctx.theme.palettes.light.background = SiteColors.Bg
+    ctx.theme.palettes.light.color = SiteColors.Text
+    ctx.theme.palettes.dark.background = SiteColors.Bg
+    ctx.theme.palettes.dark.color = SiteColors.Text
 }
