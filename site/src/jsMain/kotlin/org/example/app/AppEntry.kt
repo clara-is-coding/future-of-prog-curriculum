@@ -1,49 +1,40 @@
 package org.example.app
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import com.varabyte.kobweb.compose.css.ScrollBehavior
+import androidx.compose.runtime.DisposableEffect
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
-import com.varabyte.kobweb.compose.ui.modifiers.scrollBehavior
 import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.SilkApp
 import com.varabyte.kobweb.silk.components.layout.Surface
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
-import com.varabyte.kobweb.silk.init.registerStyleBase
-import com.varabyte.kobweb.silk.style.common.SmoothColorStyle
-import com.varabyte.kobweb.silk.style.toModifier
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import com.varabyte.kobweb.silk.theme.colors.loadFromLocalStorage
-import com.varabyte.kobweb.silk.theme.colors.saveToLocalStorage
-import com.varabyte.kobweb.silk.theme.colors.systemPreference
+import kotlinx.browser.document
 import org.jetbrains.compose.web.css.vh
-
-private const val COLOR_MODE_KEY = "app:colorMode"
+import org.w3c.dom.HTMLLinkElement
 
 @InitSilk
 fun initColorMode(ctx: InitSilkContext) {
-    ctx.config.initialColorMode = ColorMode.loadFromLocalStorage(COLOR_MODE_KEY) ?: ColorMode.systemPreference
-}
-
-@InitSilk
-fun initStyles(ctx: InitSilkContext) {
-    ctx.stylesheet.apply {
-        registerStyleBase("body") { Modifier.scrollBehavior(ScrollBehavior.Smooth) }
-    }
+    ctx.config.initialColorMode = ColorMode.LIGHT
 }
 
 @App
 @Composable
 fun AppEntry(content: @Composable () -> Unit) {
+    // Inject the font stylesheet into <head> at runtime
+    DisposableEffect(Unit) {
+        val link = document.createElement("link") as HTMLLinkElement
+        link.rel = "stylesheet"
+        link.href = "/fonts.css"
+        document.head?.appendChild(link)
+        onDispose { document.head?.removeChild(link) }
+    }
+
     SilkApp {
-        val colorMode = ColorMode.current
-        LaunchedEffect(colorMode) {
-            colorMode.saveToLocalStorage(COLOR_MODE_KEY)
-        }
-        Surface(SmoothColorStyle.toModifier().minHeight(100.vh)) {
+        Surface(Modifier.minHeight(100.vh)) {
             content()
         }
+        CursorTrail()
     }
 }

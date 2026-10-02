@@ -1,4 +1,5 @@
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+import kotlinx.html.link
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -13,7 +14,10 @@ version = "1.0-SNAPSHOT"
 kobweb {
     app {
         index {
-            description.set("Powered by Kobweb")
+            description.set("A mini-curriculum by Clara from JetBrains Academy")
+            head.add {
+                link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap")
+            }
         }
     }
 }
@@ -37,6 +41,7 @@ kotlin {
             // Uncomment the following if you want access to a large set of font-awesome icons:
             // implementation(libs.silk.icons.fa)
             implementation(libs.kobwebx.markdown)
+            implementation("canvas-confetti", "1.9.3"))
         }
 
         // Uncomment the following if you pass `includeServer = true` into the `configAsKobwebApplication` call.

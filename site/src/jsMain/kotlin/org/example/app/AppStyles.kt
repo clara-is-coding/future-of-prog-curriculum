@@ -1,69 +1,125 @@
 package org.example.app
 
-import com.varabyte.kobweb.compose.css.ScrollBehavior
-import com.varabyte.kobweb.compose.css.TextAlign
+import com.varabyte.kobweb.compose.css.*
+import com.varabyte.kobweb.compose.css.AlignItems
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.silk.components.forms.ButtonStyle
-import com.varabyte.kobweb.silk.components.forms.ButtonVars
-import com.varabyte.kobweb.silk.components.layout.HorizontalDividerStyle
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.init.registerStyleBase
 import com.varabyte.kobweb.silk.style.CssStyle
-import com.varabyte.kobweb.silk.style.addVariantBase
 import com.varabyte.kobweb.silk.style.base
-import com.varabyte.kobweb.silk.theme.colors.palette.color
-import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
-import com.varabyte.kobweb.silk.theme.modifyStyleBase
 import org.jetbrains.compose.web.css.*
 
 @InitSilk
 fun initSiteStyles(ctx: InitSilkContext) {
-    // This site does not need scrolling itself, but this is a good demonstration for how you might enable this in your
-    // own site. Note that we only enable smooth scrolling unless the user has requested reduced motion, which is
-    // considered a best practice.
-    ctx.stylesheet.registerStyle("html") {
-        cssRule(CSSMediaQuery.MediaFeature("prefers-reduced-motion", StylePropertyValue("no-preference"))) {
-            Modifier.scrollBehavior(ScrollBehavior.Smooth)
-        }
+    ctx.stylesheet.registerStyleBase("*, *::before, *::after") {
+        Modifier.boxSizing(BoxSizing.BorderBox)
     }
-
     ctx.stylesheet.registerStyleBase("body") {
         Modifier
-            .fontFamily(
-                "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-                "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans-serif"
-            )
-            .fontSize(18.px)
-            .lineHeight(1.5)
+            .margin(0.px)
+            .padding(leftRight = 1.cssRem)
+            .fontFamily("JetBrains Sans", "Inter", "system-ui", "Helvetica", "Arial", "sans-serif")
+            .color(SiteColors.Text)
+            .backgroundColor(SiteColors.Bg)
     }
-
-    // Silk dividers only extend 90% by default; we want full width dividers in our site
-    ctx.theme.modifyStyleBase(HorizontalDividerStyle) {
-        Modifier.fillMaxWidth()
+    ctx.stylesheet.registerStyleBase("a") {
+        Modifier.color(SiteColors.Accent)
+    }
+    // Toad mouse pointer ("0 0" = the click point is the image's top-left corner)
+    ctx.stylesheet.registerStyleBase("html") {
+        Modifier.styleModifier { property("cursor", "url(\"/tode-cursor.png\") 0 0, auto") }
+    }
+    // Toad instead of the hand pointer on links and buttons too (disabled buttons keep the "not allowed" cursor)
+    ctx.stylesheet.registerStyleBase("a, button:not(:disabled)") {
+        Modifier.styleModifier { property("cursor", "url(\"/tode-cursor.png\") 0 0, auto") }
+    }
+    // Winking toad while the mouse button is held down
+    ctx.stylesheet.registerStyleBase("html:active, html:active *") {
+        Modifier.styleModifier { property("cursor", "url(\"/tode-winking-cursor.png\") 0 0, auto") }
     }
 }
 
-val HeadlineTextStyle = CssStyle.base {
-    Modifier
-        .fontSize(3.cssRem)
-        .textAlign(TextAlign.Start)
-        .lineHeight(1.2) //1.5x doesn't look as good on very large text
+// Timer duration buttons (10 / 20 / 30 min)
+val TimerOptionStyle = CssStyle {
+    base {
+        Modifier
+            .padding(topBottom = 0.4.cssRem, leftRight = 1.1.cssRem)
+            .border(1.px, LineStyle.Solid, SiteColors.Accent)
+            .borderRadius(20.px)
+            .backgroundColor(Colors.White)
+            .color(SiteColors.Accent)
+            .fontFamily("JetBrains Mono", "monospace")
+            .fontSize(0.9.cssRem)
+    }
+    cssRule(":hover") {
+        Modifier.backgroundColor(SiteColors.Accent).color(Colors.White)
+    }
 }
 
-val SubheadlineTextStyle = CssStyle.base {
-    Modifier
-        .fontSize(1.cssRem)
-        .textAlign(TextAlign.Start)
-        .color(colorMode.toPalette().color.toRgb().copyf(alpha = 0.8f))
+// Start / Pause / Reset buttons
+val TimerBtnStyle = CssStyle {
+    base {
+        Modifier
+            .padding(topBottom = 0.5.cssRem, leftRight = 1.5.cssRem)
+            .borderRadius(8.px)
+            .border(1.px, LineStyle.Solid, SiteColors.Border)
+            .backgroundColor(Colors.White)
+            .color(SiteColors.Text)
+            .fontFamily("inherit")
+            .fontSize(0.95.cssRem)
+    }
+    cssRule(":hover:not(:disabled)") {
+        Modifier
+            .color(SiteColors.Accent)
+            .styleModifier { property("border-color", SiteColors.Accent) }
+    }
+    cssRule(":disabled") {
+        Modifier.opacity(0.4).cursor(Cursor.NotAllowed)
+    }
 }
 
-val CircleButtonVariant = ButtonStyle.addVariantBase {
-    Modifier.padding(0.px).borderRadius(50.percent)
+// Reflection textarea
+val ReflectionInputStyle = CssStyle {
+    base {
+        Modifier
+            .width(100.percent)
+            .padding(topBottom = 1.cssRem, leftRight = 1.25.cssRem)
+            .border(1.px, LineStyle.Solid, SiteColors.Border)
+            .borderRadius(10.px)
+            .fontFamily("inherit")
+            .fontSize(1.cssRem)
+            .lineHeight(1.7)
+            .color(SiteColors.Text)
+            .backgroundColor(Colors.White)
+            .resize(Resize.Vertical)
+    }
+    cssRule(":focus") {
+        Modifier.styleModifier {
+            property("border-color", "#2563eb")
+            property("outline", "none")
+            property("box-shadow", "0 0 0 3px rgba(37, 99, 235, 0.1)")
+        }
+    }
+    cssRule("::placeholder") {
+        Modifier.color(SiteColors.TextMuted)
+    }
 }
 
-val UncoloredButtonVariant = ButtonStyle.addVariantBase {
-    Modifier.setVariable(ButtonVars.BackgroundDefaultColor, Colors.Transparent)
+// Todo item row (needs hover background)
+val TodoRowStyle = CssStyle {
+    base {
+        Modifier
+            .display(DisplayStyle.Flex)
+            .alignItems(AlignItems.FlexStart)
+            .gap(0.75.cssRem)
+            .padding(topBottom = 0.6.cssRem, leftRight = 0.75.cssRem)
+            .borderRadius(8.px)
+    }
+    cssRule(":hover") {
+        Modifier.styleModifier { property("background-color", "rgba(37, 99, 235, 0.05)") }
+    }
 }
