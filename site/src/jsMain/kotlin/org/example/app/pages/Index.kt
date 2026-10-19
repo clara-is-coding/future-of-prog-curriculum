@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import org.example.app.*
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
+import org.w3c.dom.HTMLAnchorElement
 
 @Page
 @Composable
@@ -102,7 +103,7 @@ fun HomePage() {
                 .toAttrs {
                     style { property("font-style", "italic") }
                 }
-        ) { Text("a mini-curriculum by Clara from "); A(href = "https://www.youtube.com/@JetBrainsAcademy") { Text("JetBrains Academy") } }
+        ) { Text("a mini-curriculum by Clara from "); ExternalLink(href = "https://www.youtube.com/@JetBrainsAcademy") { Text("JetBrains Academy") } }
     }
     }
 
@@ -290,11 +291,11 @@ private fun DeepenSection() {
             TodoItem(label = { Text("Choose a course and seriously commit to it") })
             BlockQuote {
                 Text("Don't worry too much about choosing the perfect specialization. The point here is just going with something and letting it take you somewhere. ")
-                A(href = "https://academy.jetbrains.com/course/16630") { Text("This could be anything.") }
+                ExternalLink(href = "https://academy.jetbrains.com/course/16630") { Text("This could be anything.") }
                 Text(" ")
-                A(href = "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents") { Text("Anything at all.") }
+                ExternalLink(href = "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents") { Text("Anything at all.") }
                 Text(" I mean we do have ")
-                A(href = "https://academy.jetbrains.com/") { Text("specifically tailored specializations") }
+                ExternalLink(href = "https://academy.jetbrains.com/") { Text("specifically tailored specializations") }
                 Text(". If not… that's fine. I won't be jealous. Probably.")
             }
         }
@@ -315,13 +316,13 @@ private fun DeepenSection() {
                 description = {
                     Text("Clara's computing inspo starter pack <3:")
                     Br()
-                    A(href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ") { Text("🎧 python 4 u by charlixcx") }
+                    ExternalLink(href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ") { Text("🎧 python 4 u by charlixcx") }
                     Br()
-                    A(href = "https://www.youtube.com/watch?v=jYUZAF3ePFE") { Text("🎥 Linus torvalds basement reveal") }
+                    ExternalLink(href = "https://www.youtube.com/watch?v=jYUZAF3ePFE") { Text("🎥 Linus torvalds basement reveal") }
                     Br()
-                    A(href = "https://youtu.be/iaT_zvNN_zc?si=8IstuZAg2c_A9k3c") {Text("🎧 Love, Learning, and CS Education keynote by Amy Ko") }
+                    ExternalLink(href = "https://youtu.be/iaT_zvNN_zc?si=8IstuZAg2c_A9k3c") {Text("🎧 Love, Learning, and CS Education keynote by Amy Ko") }
                     Br()
-                    A(href = "https://www.oreilly.com/content/a-short-history-of-the-oreilly-animals/") { Text("📕 One of those books with the birds on the cover") }
+                    ExternalLink(href = "https://www.oreilly.com/content/a-short-history-of-the-oreilly-animals/") { Text("📕 One of those books with the birds on the cover") }
                 }
             )
 
@@ -346,15 +347,17 @@ private fun BroadenSection() {
             },
             description = {
                 Text("Ever heard of an ")
-                A(href = "https://en.wikipedia.org/wiki/Experience_machine") { Text("experience machine?") }
+                ExternalLink(href = "https://en.wikipedia.org/wiki/Experience_machine") { Text("experience machine?") }
             }
         )
 
         TodoItem(
             label = { Text("Follow short courses in other domains") },
             description = {
-                Text("Our computer science knowledge map can help you visualize what subjects you might find interesting to explore, or you can even consider departing from computing altogether. Bringing technical expertise to a writing course might lead to great science fiction, or ")
-                A(href = "https://www.youtube.com/@JetBrainsAcademy") { Text("mid-tier youtube videos") }
+                Text("Our computer science ")
+                ExternalLink(href = "https://hyperskill.org/knowledge-map/1162") { Text("knowledge map") }
+                Text(" can help you visualize what subjects you might find interesting to explore, or you can even consider departing from computing altogether. Bringing technical expertise to a writing course might lead to great science fiction, or ")
+                ExternalLink(href = "https://www.youtube.com/@JetBrainsAcademy") { Text("mid-tier youtube videos") }
                 Text(". Or you could check out, like Docker or something idk.")
             }
         )
@@ -399,6 +402,19 @@ private fun FaqSection() {
 
 
 // ========== REUSABLE COMPONENTS ==========
+
+// A link that opens in a new browser tab
+@Composable
+private fun ExternalLink(href: String, content: ContentBuilder<HTMLAnchorElement>) {
+    A(
+        href = href,
+        attrs = {
+            attr("target", "_blank")
+            attr("rel", "noopener noreferrer")
+        },
+        content = content
+    )
+}
 
 @Composable
 private fun SectionTitle(text: String) {
